@@ -3,15 +3,17 @@ import User from "../models/users.js";
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 import fs from "fs";
-import MESSAGES from "../constants/messages.js"; // adjust path if needed
+import MESSAGES from "../constants/messages.js"; 
+
+const { USER, PASS} = process.env;
 
 const { AUTH, GENERAL } = MESSAGES;
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "deepsavani62114@gmail.com",
-    pass: "njnr erow kwop cvgl",
+    user: USER,
+    pass: PASS,
   },
 });
 
