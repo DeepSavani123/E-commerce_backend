@@ -1,19 +1,25 @@
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
 import User from "../models/users.js";
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 import fs from "fs";
 import MESSAGES from "../constants/messages.js"; 
+dotenv.config();
 
-const { USER, PASS} = process.env;
 
 const { AUTH, GENERAL } = MESSAGES;
+
+const { EMAIL_USERNAME, EMAIL_PASSWORD, JWT_SECRET } = process.env;
+
+console.log(EMAIL_USERNAME, EMAIL_PASSWORD, JWT_SECRET)
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: USER,
-    pass: PASS,
+    user:EMAIL_USERNAME ,
+    pass: EMAIL_PASSWORD,
   },
 });
 
@@ -78,7 +84,7 @@ const loginUser = async (req, res) => {
     await login.save();
 
     const mailOptions = {
-      from: "deepsavani62114@gmail.com",
+      from: EMAIL_USERNAME,
       to: login.email,
       subject: "Your OTP Code",
       html: htmlFile.replace("{{otp}}", otp.toString()),
@@ -124,7 +130,7 @@ const verifyLoginOtp = async (req, res) => {
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
+     JWT_SECRET,
       { expiresIn: "1d" }
     );
 
